@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html  lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>Flask App </title>
+
+
+
+    <!-- Bootstraps Java Scipts Links -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+    <!-- JQuery links  -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+    <!--High CHART LIVE  -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+    <!--Gauge  -->
+    <script type="text/javascript" src="http://pubnub.github.io/eon/lib/eon.js"></script>
+
+
+    <!--datepicker -->  
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+<body>
+    <!-- including navbar using jinja -->
+    {% include 'navbar.html' %}
+
+    <!-- main part of the homepage -->
+    <div class="home">
+        <div class="left">
+            <div class="parameters">
+                <div class="meter_info">
+                    <div class="datasets" style="background-color: #3e1212;">
+                        <h1 class="sensor10">Meter ID :</h1>
+                    <br>
+                        <h1 class="sensor11">Meter location :</h1>
+                    </div>
+                </div>
+                <div class="Live_parameter_data">                   
+                    <div class="datasets">
+                        <h1 class="sensor1"> Average Voltage LL : </h1>
+                    </div>
+                    <br>
+        
+                    <div class="datasets">
+                        <h1 class="sensor2">Current_i1 :</h1>
+                    </div>
+                    <br>
+                    <div class="datasets">
+                        <h1 class="sensor3">Frequency :</h1>
+                    </div>
+                    <br>
+                    <div class="datasets">
+                        <h1 class="sensor4">Total harmonic distortion :</h1>
+                    </div>
+                    <br>
+                    <div class="datasets">
+                        <h1 class="sensor5">Apparent energy :</h1>
+                    </div>
+                    <br>
+                    <div class="datasets">
+                        <h1 class="sensor6">Power factor :</h1>
+                    </div>
+                    <br>
+                    <div class="datasets">
+                        <h1 class="sensor7">Energy :</h1>
+                    </div>
+                    <br>
+                    <div class="datasets">
+                        <h1 class="sensor8">Power :</h1>
+                    </div>
+                    <br>
+                    <div class="datasets">
+                        <h1 class="sensor9">Apparent power :</h1>
+                    </div>
+                    <br>
+                </div>
+                <div class="energy_meter">               <!-- Energy Calculation -->
+                    <div class="calculation">
+                        <div class="put">
+                            <h1 class="values">Energy Consumption of previous day:</h1>
+                            <input type="number" id="t1" value= "{{ data2 }}" disabled>
+                        </div>
+                        <div class="put">                        
+                            <h1 class="values">Total production of Previous Day:</h1>
+                            <input type="number" id="t2">
+                        </div>
+                        <div class="put">
+                            <input type="button" onclick="calcTotalCons()" value="Submit"/>
+                            <h1 class="values">Specific Energy:  </h1><input type="number" id="num-area" disabled>
+                        </div>
+                        <script>
+                            function calcTotalCons() { 
+                                var a = document.getElementById("t1").value; 
+                                var b = document.getElementById("t2").value; 
+                                document.getElementById("num-area").value = a * b; 
+                            }  
+                        </script>        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="buttons">
+                <div class="meterbox">
+                    <label for="MeterNo.">Select Meter No.:</label>
+                    <form method="post" action="/currentdata">
+                        <select  id="Meter_id" name="meter_id" type="text" placeholder ="Please select a meter">
+                            <option disabled selected style>Select a meter</option>
+                            <option value="m1">Meter 1</option>
+                            <option value="m2">Meter 2</option>
+                            <option value="m3">Meter 3</option>
+                            <option value="m4">Meter 4</option>
+                            <option value="4">Meter 5</option>
+                            <option value="1">Meter 6</option>
+                            <option value="2">Meter 7</option>
+                            <option value="3">Meter 8</option>
+                            <option value="4">Meter 9</option>
+                            <option value="4">Meter 10</option>
+                            <option value="1">Meter 11</option>
+                            <option value="2">Meter 12</option>
+                            <option value="3">Meter 13</option>
+                            <option value="4">Meter 14</option>
+                            <option value="4">Meter 15</option>
+                            <option value="1">Meter 16</option>
+                            <option value="2">Meter 17</option>
+                            <option value="3">Meter 18</option>
+                            <option value="4">Meter 19</option>
+                            <option value="4">Meter 20</option>
+                            <option value="1">Meter 21</option>
+                            <option value="2">Meter 22</option>
+                            <option value="3">Meter 23</option>
+                            <option value="4">Meter 24</option>
+                            <option value="4">Meter 25</option>
+                            <option value="1">Meter 26</option>
+                            <option value="2">Meter 27</option>
+                            <option value="3">Meter 28</option>
+                            <option value="4">Meter 29</option>
+                            <option value="4">Meter 30</option>
+                            <option value="1">Meter 31</option>
+                            <option value="2">Meter 32</option>
+                            <option value="3">Meter 33</option>
+                            <option value="4">Meter 34</option>
+                            <option value="4">Meter 35</option>
+                            <option value="1">Meter 36</option>
+                            <option value="2">Meter 37</option>
+                            <option value="3">Meter 38</option>
+                            <option value="4">Meter 39</option>
+                            <option value="4">Meter 40</option>
+                            <option value="1">Meter 41</option>
+                            <option value="2">Meter 42</option>
+                            <option value="3">Meter 43</option>
+                            <option value="4">Meter 44</option>
+                            <option value="4">Meter 45</option>
+                            <option value="1">Meter 46</option>
+                            <option value="2">Meter 47</option>
+                            
+
+
+                        </select>    
+                        <input type="submit" value="Submit" style="margin-left: 10px;">
+                    </form>
+                </div>
+                <div class="btns">
+                    <div class="downloadbtn">
+                        <a href="/getPlotCSV">
+                            Download
+                        </a>
+                    </div>
+                    <div class="pop_up">
+                            <!-- Trigger/Open The Modal -->
+                            <button id="myBtn" class="a">View Data</button>
+                            <!-- The Modal -->
+                            <div id="myModal" class="modal">
+                                <!-- Modal content -->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h2>Live Data</h2>
+                                    <button class="close">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table id="datatable" style="width: 100%">
+                                            <tr>
+                                              <th>MeterID</th>
+                                              <th>Modbus_time</th>
+                                              <th>Average Voltage LL</th>
+                                              <th>Current_i1/th>
+                                              <th>Frequency</th>
+                                              <th>Total_harmonic_distortion</th>
+                                              <th>Apparent_energy</th>
+                                              <th>Power_factor</th>
+                                              <th>Energy</th>
+                                              <th>Power</th>
+                                              <th>Apparent_power</th>
+                                      
+                                            </tr>
+                                            {{ data0 }}
+                                            {% for row in data1 %}
+                                            <tr>
+                                              {% for cell in row %}
+                                              <td>{{ cell }}
+                                                
+                                              </td>
+                                              {% endfor %}
+                                            </tr>
+                                            {% endfor %}
+                                          </table>
+                                    </div>
+                                </div>
+                                
+                            </div>                               
+                            <script>
+                            // Get the modal
+                            var modal = document.getElementById("myModal");
+                            
+                            // Get the button that opens the modal
+                            var btn = document.getElementById("myBtn");
+                            
+                            // Get the <span> element that closes the modal
+                            var span = document.getElementsByClassName("close")[0];
+                            
+                            // When the user clicks the button, open the modal 
+                            btn.onclick = function() {
+                              modal.style.display = "block";
+                            }
+                            
+                            // When the user clicks on <span> (x), close the modal
+                            span.onclick = function() {
+                              modal.style.display = "none";
+                            }
+                            
+                            // When the user clicks anywhere outside of the modal, close it
+                            window.onclick = function(event) {
+                              if (event.target == modal) {
+                                modal.style.display = "none";
+                              }
+                            }
+                            </script>
+                    </div>
+                </div>           
+            </div>
+            <div class="graphs">
+                <div class="container-fluid">
+                    <!-- Example row of columns -->
+                    <div class="row">
+                        <div class="chart-wrapper" id="data-a">
+                
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <br>
+                
+                <div class="container-fluid">
+                    <!-- Example row of columns -->
+                    <div class="row">
+                        <div class="chart-wrapper" id="data-b">
+                
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <br>
+                
+                <div class="container-fluid">
+                    <!-- Example row of columns -->
+                    <div class="row">
+                        <div class="chart-wrapper" id="data-c">
+                
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <br>
+
+                <div class="container-fluid">
+                    <!-- Example row of columns -->
+                    <div class="row">
+                        <div class="chart-wrapper" id="data-d">
+                
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <br>
+
+                <div class="container-fluid">
+                <!-- Example row of columns -->
+                    <div class="row">
+                        <div class="chart-wrapper" id="data-e">
+                
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <br>
+
+                <div class="container-fluid">
+                    <!-- Example row of columns -->
+                    <div class="row">
+                        <div class="chart-wrapper" id="data-f">
+            
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <br>   
+
+                <div class="container-fluid">
+                    <!-- Example row of columns -->
+                    <div class="row">
+                        <div class="chart-wrapper" id="data-g">
+        
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <br> 
+
+                <div class="container-fluid">
+                    <!-- Example row of columns -->
+                    <div class="row">
+                        <div class="chart-wrapper" id="data-h">
+        
+                        </div>
+                    </div>
+                </div>
+    
+                <br>
+                <br>  
+    
+                <div class="container-fluid">
+                    <!-- Example row of columns -->
+                    <div class="row">
+                        <div class="chart-wrapper" id="data-i">
+        
+                        </div>
+                    </div>
+                </div> 
+    
+                <br>
+                <br>
+                <br>  
+    
+                <div class="container-fluid">
+                    <!-- Example row of columns -->
+                    <div class="row">
+                        <div class="chart-wrapper" id="data-loc">
+        
+                        </div>
+                    </div>
+                </div> 
+
+                <script>
+                    var charta;
+                    var chartb;
+                    var chartc;
+                    var chartd;
+                    var charte;
+                    var chartf;
+                    var chartg;
+                    var charth;
+                    var charti;
+                    var chartj;
+                    var chartloc;
+            
+                    function requestData()
+                    {
+                        // Ajax call to get the Data from Flask
+                        var requests = $.get('/data');
+            
+                        var tm = requests.done(function (result)
+                        {
+                            // a
+                            var seriesa = charta.series[0],
+                                shifta = seriesa.data.length > 500;
+            
+                            // b
+                            var seriesb = chartb.series[0],
+                                shiftb = seriesb.data.length > 500;  
+            
+                            // c
+                            var seriesc = chartc.series[0],
+                                shiftc = seriesc.data.length > 500;
+     
+                            // d
+                            var seriesd = chartd.series[0],
+                                shiftd = seriesd.data.length > 500;
+                                
+                            // e
+                            var seriese = charte.series[0],
+                                shifte = seriese.data.length > 500;
+    
+                            // f
+                            var seriesf = chartf.series[0],
+                                shiftf = seriesf.data.length > 500;
+            
+                            // g
+                            var seriesg = chartg.series[0],
+                                shiftg = seriesg.data.length > 500;        
+                             // h
+                             var seriesh = charth.series[0],
+                                shifth = seriesh.data.length > 500;  
+                                
+                            // i
+                             var seriesi = charti.series[0],
+                                shifti = seriesi.data.length > 500;
+    
+                            // j
+                             //var seriesj = chartj.series[0],
+                                //shiftj = seriesj.data.length > 500;
+            
+                            // Add the Point
+                            // Time a\
+                            var data1 = [];
+                            data1.push(result);
+                            data1.push(result[1]);
+            
+            
+                            // Add the Point
+                            // Time b
+                            var data2 = [];
+                            data2.push(result);
+                            data2.push(result[2]);
+            
+            
+                            //Add the Point
+                            // Time c
+                            var data3 = [];
+                            data3.push(result[0]);
+                            data3.push(result[3]);
+    
+    
+    
+                            //Add the Point
+                            // Time d
+                            var data4 = [];
+                            data4.push(result[0]);
+                            data4.push(result[4]);
+    
+                            //Add the Point
+                            // Time e
+                            var data5 = [];
+                            data5.push(result[0]);
+                            data5.push(result[5]);        
+            
+                            //Add the Point
+                            // Time f
+                            var data6 = [];
+                            data6.push(result[0]);
+                            data6.push(result[6]);  
+                            
+                            //Add the Point
+                            // Time g
+                            var data7 = [];
+                            data7.push(result[0]);
+                            data7.push(result[7]);
+    
+                            //Add the Point
+                            // Time h
+                            var data8 = [];
+                            data8.push(result[0]);
+                            data8.push(result[8]);
+    
+                                                    //Add the Point
+                            // Time i
+                            var data9 = [];
+                            data9.push(result[0]);
+                            data9.push(result[9]);
+    
+                            // Time j
+                            var data10 = [];
+                            data10.push(result[0]);
+                            data10.push(result[10]);
+    
+                             // Time loc
+                             var dataloc = [];
+                            dataloc.push(result[0]);
+                            dataloc.push(result[11]);
+            
+                            charta.series[0].addPoint(data1, true, shifta);
+                            chartb.series[0].addPoint(data2, true, shiftb);
+                            chartc.series[0].addPoint(data3, true, shiftc);
+                            chartd.series[0].addPoint(data5, true, shiftd);
+                            charte.series[0].addPoint(data6, true, shifte);
+                            chartf.series[0].addPoint(data7, true, shiftf);
+                            chartg.series[0].addPoint(data8, true, shiftg);
+                            charth.series[0].addPoint(data9, true, shifth);
+                            charti.series[0].addPoint(data10, true, shifti);
+            
+    
+                            
+                            $(".sensor1").text("");
+                            $(".sensor1").text("Average Voltage LL : " +  data1[1] );
+            
+                            $(".sensor2").text("");
+                            $(".sensor2").text("Average Current : " +  data2[1] );
+            
+                            $(".sensor3").text("");
+                            $(".sensor3").text("Frequency : " + data3[1] );
+                            
+                            $(".sensor5").text("");
+                            $(".sensor5").text("Average Power Factor : " +  data5[1]);
+    
+                            $(".sensor6").text("");
+                            $(".sensor6").text("Active Power : " +  data6[1]);
+            
+                            $(".sensor7").text("");
+                            $(".sensor7").text("Active Energy : " +  data7[1]);
+                            
+                            $(".sensor8").text("");
+                            $(".sensor8").text("Apparent Power : " +  data8[1]);
+                            
+                            $(".sensor9").text("");
+                            $(".sensor9").text("Apparent Energy : " +  data9[1]);
+    
+                            $(".sensor4").text("");
+                            $(".sensor4").text("Total Harmonic Distortion : " +  data10[1]);
+    
+                            $(".sensor10").text("");
+                            $(".sensor10").text("Meter ID : " +  data4[1]);
+    
+                            $(".sensor11").text("");
+                            $(".sensor11").text("Meter location : " +  dataloc[1]);
+                            
+                            // call it again after one second
+                            setTimeout(requestData, 60000);
+            
+                        });
+                    }
+            
+                    $(document).ready(function()
+                    {
+                        // --------------Chart 1 ----------------------------
+                        charta = new Highcharts.Chart({
+                            chart:
+                                {
+                                renderTo: 'data-a',
+                                defaultSeriesType: 'spline',
+                                events: {
+                                    load: requestData
+                                        }
+                                },
+                            title:
+                                {
+                                text: 'Average Voltage LL'
+                                },
+                            credits:{enabled:false},
+                            xAxis: {
+                                type: 'datetime',
+                                tickPixelInterval: 1800000,
+                                maxRange: 30 * 60000
+                                    },
+                            yAxis: {
+                                minPadding: 0.2,
+                                maxPadding: 0.2,
+                                title: {
+                                    text: 'Average Voltage LL',
+                                    margin: 80
+                                        }
+                                     },
+                            series: [{
+                                color : '#c23d23',
+                                lineColor:"blue",
+                                name: 'Average Voltage LL',
+                                data: []
+                            }]
+                        });
+                        // --------------Chart 1 Ends - -----------------
+            
+                        chartb = new Highcharts.Chart({
+                            chart:
+                                {
+                                    renderTo: 'data-b',
+                                    defaultSeriesType: 'spline',
+                                    events: {
+                                        load: requestData
+                                    }
+                                },
+                            title:
+                                {
+                                    text: 'Average Current'
+                                },
+                            credits:{enabled:false},
+                            xAxis: {
+                                type: 'datetime',
+                                tickPixelInterval: 1800000,
+                                maxRange: 30 * 60000
+                            },
+                            yAxis: {
+                                minPadding: 0.2,
+                                maxPadding: 0.2,
+                                title: {
+                                    text: 'Average Current',
+                                    margin: 80
+                                }
+                            },
+                            series: [{
+                                lineColor: 'blue',
+                                name: 'Average Current',
+                                data: []
+                            }]
+                        });
+                        // --------------------Chart 2 Ends --------------------
+            
+                        // --------------Chart 3 ----------------------------
+                            chartc = new Highcharts.Chart({
+                            chart:
+                                {
+                                renderTo: 'data-c',
+                                defaultSeriesType: 'spline',
+                                events: {
+                                    load: requestData
+                                        }
+                                },
+                            title:
+                                {
+                                text: 'Frequency'
+                                },
+                            
+                            credits:{enabled:false},
+                            xAxis: {
+                                type: 'datetime',
+                                tickPixelInterval: 1800000,
+                                maxRange: 30 * 60000
+                                    },
+                            yAxis: {
+                                minPadding: 0.2,
+                                maxPadding: 0.2,
+                                title: {
+                                    text: 'Frequency',
+                                    margin: 80
+                                        }
+                                     },
+                            series: [{
+                                color : '#c23d23',
+                                lineColor: '#303030',
+                                name: 'Frequency',
+                                data: []
+                            }]
+                        });
+                        // --------------Chart 3 Ends - ----------------
+    
+                    //-----------chart 4 ---------------------
+                                        // --------------Chart 1 ----------------------------
+                            chartd = new Highcharts.Chart({
+                            chart:
+                                {
+                                renderTo: 'data-d',
+                                defaultSeriesType: 'spline',
+                                events: {
+                                    load: requestData
+                                        }
+                                },
+                            title:
+                                {
+                                text: 'Average Power Factor'
+                                },
+                            credits:{enabled:false},
+                            xAxis: {
+                                type: 'datetime',
+                                tickPixelInterval: 1800000,
+                                maxRange: 30 * 60000
+                                    },
+                            yAxis: {
+                                minPadding: 0.2,
+                                maxPadding: 0.2,
+                                title: {
+                                    text: 'Average Power Factor',
+                                    margin: 80
+                                        }
+                                     },
+                            series: [{
+                                color : '#c23d23',
+                                lineColor: '#303030',
+                                name: 'Average Power Factor',
+                                data: []
+                            }]
+                        });
+    
+                        //---------chart 5 -------
+                                            // --------------Chart 1 ----------------------------
+                           charte = new Highcharts.Chart({
+                            chart:
+                                {
+                                renderTo: 'data-e',
+                                defaultSeriesType: 'spline',
+                                events: {
+                                    load: requestData
+                                        }
+                                },
+                            title:
+                                {
+                                text: 'Active Power'
+                                },
+                            credits:{enabled:false},
+                            xAxis: {
+                                type: 'datetime',
+                                tickPixelInterval: 1800000,
+                                maxRange: 30 * 60000
+                                    },
+                            yAxis: {
+                                minPadding: 0.2,
+                                maxPadding: 0.2,
+                                title: {
+                                    text: 'Active Power',
+                                    margin: 80
+                                        }
+                                     },
+                            series: [{
+                                color : '#c23d23',
+                                lineColor: '#303030',
+                                name: 'Active power',
+                                data: []
+                            }]
+                        });
+                        //---------------------- chart 6---------
+                                            // --------------Chart 1 ----------------------------
+                            chartf = new Highcharts.Chart({
+                            chart:
+                                {
+                                renderTo: 'data-f',
+                                defaultSeriesType: 'spline',
+                                events: {
+                                    load: requestData
+                                        }
+                                },
+                            title:
+                                {
+                                text: 'Active Energy'
+                                },
+                            credits:{enabled:false},
+                            xAxis: {
+                                type: 'datetime',
+                                tickPixelInterval: 1800000,
+                                maxRange: 30 * 60000
+                                    },
+                            yAxis: {
+                                minPadding: 0.2,
+                                maxPadding: 0.2,
+                                title: {
+                                    text: 'Active Energy',
+                                    margin: 80
+                                        }
+                                     },
+                            series: [{
+                                color : '#c23d23',
+                                lineColor: '#303030',
+                                name: 'Active Energy',
+                                data: []
+                            }]
+                        });
+                        //-------------------chart 7 --------
+                                            // --------------Chart 1 ----------------------------
+                           chartg = new Highcharts.Chart({
+                            chart:
+                                {
+                                renderTo: 'data-g',
+                                defaultSeriesType: 'spline',
+                                events: {
+                                    load: requestData
+                                        }
+                                },
+                            title:
+                                {
+                                text: 'Apparent Power'
+                                },
+                            credits:{enabled:false},
+                            xAxis: {
+                                type: 'datetime',
+                                tickPixelInterval: 1800000,
+                                maxRange: 30 * 60000
+                                    },
+                            yAxis: {
+                                minPadding: 0.2,
+                                maxPadding: 0.2,
+                                title: {
+                                    text: 'Apparent Power',
+                                    margin: 80
+                                        }
+                                     },
+                            series: [{
+                                color : '#c23d23',
+                                lineColor: '#303030',
+                                name: 'Apparent Power',
+                                data: []
+                            }]
+                        });
+                      //--------------------chart 8 ------------------
+                                          // --------------Chart 1 ----------------------------
+                            charth = new Highcharts.Chart({
+                            chart:
+                                {
+                                renderTo: 'data-h',
+                                defaultSeriesType: 'spline',
+                                events: {
+                                    load: requestData
+                                        }
+                                },
+                            title:
+                                {
+                                text: 'Apparent Energy'
+                                },
+                            credits:{enabled:false},
+                            xAxis: {
+                                type: 'datetime',
+                                tickPixelInterval: 1800000,
+                                maxRange: 30 * 60000
+                                    },
+                            yAxis: {
+                                minPadding: 0.2,
+                                maxPadding: 0.2,
+                                title: {
+                                    text: 'Apparent Energy',
+                                    margin: 80
+                                        }
+                                     },
+                            series: [{
+                                color : '#c23d23',
+                                lineColor: '#303030',
+                                name: 'Apparent Energy',
+                                data: []
+                            }]
+                        }); 
+                        //--------------chart 9 ---------
+                            charti = new Highcharts.Chart({
+                            chart:
+                                {
+                                renderTo: 'data-i',
+                                defaultSeriesType: 'spline',
+                                events: {
+                                    load: requestData
+                                        }
+                                },
+                            title:
+                                {
+                                text: 'Total Harmonic Distortion'
+                                },
+                            credits:{enabled:false},
+                            xAxis: {
+                                type: 'datetime',
+                                tickPixelInterval: 1800000,
+                                maxRange: 30 * 60000
+                                    },
+                            yAxis: {
+                                minPadding: 0.2,
+                                maxPadding: 0.2,
+                                title: {
+                                    text: 'Total Harmonic Distortion',
+                                    margin: 80
+                                        }
+                                     },
+                            series: [{
+                                color : '#c23d23',
+                                lineColor: '#303030',
+                                name: 'Total Harmonic Distortion',
+                                data: []
+                            }]
+                        }); 
+                    });
+                </script>
+            
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+body{
+    margin: 0;
+    border: 0;
+    box-sizing: border-box;
+    height: 100vh;
+    min-width: 960px;
+    overflow: auto;
+    overflow-x: auto;
+    overflow-y: auto;
+    
+}
+.home .left {
+    width: 30%;
+    border: solid black 1px;
+    min-height: fit-content;
+    overflow: auto;
+    overflow-y: scroll;
+    padding-left: 1%;
+    padding-right: 1%;
+    background-image: linear-gradient(rgb(7, 7, 70), rgb(134, 134, 145));
+}
+
+.home .right {
+    width: 70%;
+    border: solid black 1px;
+    height: 100%;
+    min-height: fit-content;
+}
+.home{
+    background-color: bisque;
+    width: 100%;
+    display: flex;
+    margin: 0;
+    height: 100% ;
+}
+.datasets{
+    display: inline-block;
+    border: solid white 1px;
+    width: 100%;
+    padding: 6px;
+    margin-top: 6px;
+    color: white;
+
+}
+.sensor1{
+    font-size: large;
+}
+.sensor2{
+    font-size: large;
+}
+.sensor3{
+    font-size: large;
+}
+.sensor4{
+    font-size: large;
+}
+.sensor5{
+    font-size: large;
+}
+.sensor6{
+    font-size: large;
+}
+.sensor7{
+    font-size: large;
+}
+.sensor8{
+    font-size: large;
+}
+.sensor9{
+    font-size: large;
+}
+.sensor10{
+    font-size: large;
+}
+.sensor11{
+    font-size: large;
+}
+.energy_meter{
+    margin-top: 6px;
+    color: white;
+    padding: 6px;
+    margin-bottom: 10px;
+    border: solid white 1px;
+}
+.put{
+    padding-top: 12px;
+}
+.values{
+    font-size: large;
+}
+.buttons{
+    margin-bottom: 20px;
+    display: flex;
+    grid-template-columns: 1fr 1fr;
+    padding-left: 20px;
+    margin-top: 20px;
+    position: relative;
+    min-height: max-content;
+}
+.buttons a{
+	display: block;
+	background: #00A9D4;
+	color: #fff;
+	padding: 4px;
+	cursor: pointer;
+	text-decoration: none;
+	width: 200px;
+	text-align: center;
+	border-radius: 5px;
+	font-size: 20px;
+}
+.buttons a:hover {
+	background: #00729D;
+}
+.buttons .a{
+    display: block;
+	background: #00A9D4;
+	color: #fff;
+	padding: 4px;
+	cursor: pointer;
+	text-decoration: none;
+	width: 200px;
+	text-align: center;
+	border-radius: 5px;
+	font-size: 20px;
+    border: none;
+    margin-top: 10px;
+}
+.buttons .a:hover {
+	background: #00729D;
+}
+.btns{
+    position:absolute;
+    right: 20px;
+}
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+.modal-header{
+    display: flex;
+    justify-content: space-between;
+    text-align-last: left;
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  overflow: auto;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+#datatable{
+  overflow-y: scroll;
+  overflow-x: scroll;
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+}
+
+#datatable td, #datatable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#datatable tr:nth-child(even){background-color: #f2f2f2;}
+
+#datatable tr:hover {background-color: #ddd;}
+
+#datatable th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  color: black;
+}
+.chart-wrapper{
+    width: 100%;
+    height: 80%;
+    margin: 0%;
+}
+
+.graphs{  
+
+    padding: 20px;
+    max-height: 75%;
+    overflow: auto;
+    overflow-y: scroll;
+}
+</style>
+</html>
